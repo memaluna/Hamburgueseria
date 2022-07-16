@@ -15,7 +15,7 @@
     <p class="card-text"><b>Teléfono:</b> ${cliente.telefono}</p>
     <p class="card-text"><b>Direcciones:</b> 				
     	<c:forEach items="${cliente.direcciones}" var="v" varStatus="status">
-			<span class="badge bg-warning">${v.calle} ${v.numero} - ${v.barrio}</span>
+			<span class="badge bg-warning">${v.calle} ${v.numero} - ${v.localidad} - ${v.provincia}</span>
 		</c:forEach>
 	</p>
     <p class="card-text"><b>Email:</b> ${cliente.email}</p>
@@ -23,6 +23,6 @@
   </div>
 </div>
 <br>
-<button onclick="history.back()" class="btn btn-primary">Volver</button>
+<a href="/hamburgueseria/clientes" class="btn btn-success">Volver</a>
 
 <jsp:include page="/WEB-INF/vistas/template_inferior.jsp"></jsp:include>

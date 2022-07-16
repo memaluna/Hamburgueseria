@@ -24,7 +24,9 @@ public class ClienteForm {
 	private Long idDireccion;
 	private String calle;
 	private String numero;
-	private String barrio;
+	private String localidad;
+	private String provincia;
+	private String pais;
 	private Cliente cliente;
 	
 	//continuan variables de cliente
@@ -116,14 +118,30 @@ public class ClienteForm {
 		this.numero = numero;
 	}
 
-	public String getBarrio() {
-		return barrio;
+	public String getLocalidad() {
+		return localidad;
 	}
 
-	public void setBarrio(String barrio) {
-		this.barrio = barrio;
+	public void setLocalidad(String localidad) {
+		this.localidad = localidad;
 	}
-	
+
+	public String getProvincia() {
+		return provincia;
+	}
+
+	public void setProvincia(String provincia) {
+		this.provincia = provincia;
+	}
+
+	public String getPais() {
+		return pais;
+	}
+
+	public void setPais(String pais) {
+		this.pais = pais;
+	}
+
 	public Cliente getCliente() {
 		return cliente;
 	}
@@ -136,10 +154,8 @@ public class ClienteForm {
 	public String toString() {
 		return "ClienteForm [id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", telefono=" + telefono
 				+ ", direcciones=" + direcciones + ", idDireccion=" + idDireccion + ", calle=" + calle + ", numero="
-				+ numero + ", barrio=" + barrio + ", cliente=" + cliente + ", email=" + email + ", fechaAlta="
-				+ fechaAlta + "]";
+				+ numero + ", localidad=" + localidad + ", provincia=" + provincia + ", pais=" + pais + ", cliente="
+				+ cliente + ", email=" + email + ", fechaAlta=" + fechaAlta + "]";
 	}
-
-
 	
 }

@@ -13,13 +13,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Cliente;
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Direccion;
 import edu.Kolektor.ELuna.Hamburgueseria.mvc.form.ClienteForm;
+import edu.Kolektor.ELuna.Hamburgueseria.mvc.form.DireccionForm;
 import edu.Kolektor.ELuna.Hamburgueseria.service.HamburgueseriaService;
-
-
 
 @Controller
 @RequestMapping("/hamburgueseria")
@@ -68,7 +66,9 @@ public class HamburgueseriaController {
 		Direccion direccion = new Direccion();
 		direccion.setCalle(clienteForm.getCalle());
 		direccion.setNumero(clienteForm.getNumero());
-		direccion.setBarrio(clienteForm.getBarrio());
+		direccion.setLocalidad(clienteForm.getLocalidad());
+		direccion.setProvincia(clienteForm.getProvincia());
+		direccion.setPais(clienteForm.getPais());
 		direccion.setCliente(cliente);
 		
 		
@@ -125,4 +125,72 @@ public class HamburgueseriaController {
 		model.addAttribute("cliente", cliente);
 		return "/hamburgueseria/vercliente";
 	}
+	
+	//Direcciones--------------------------->
+	
+	@GetMapping("cliente/{id}/direccion/nueva")
+	public String nuevaDireccion(Model model, @PathVariable Long id) {
+		Cliente cliente = new Cliente();
+		cliente.setId(id);
+		DireccionForm direccionForm = new DireccionForm();
+		direccionForm.setCliente(cliente);
+		model.addAttribute("direccionForm", direccionForm);
+		System.out.println("direccion model " + model);
+		return "/hamburgueseria/direccionform";
+	}
+	
+	@PostMapping("cliente/direccion/guardar")
+	public String guardar(@Valid @ModelAttribute(name = "direccionForm") DireccionForm direccionForm, BindingResult bindingResult, Model model) {
+
+		log.info("Ejecutando el guardar: " + bindingResult.hasErrors());
+		if(bindingResult.hasErrors()) {
+			model.addAttribute("direccionForm", direccionForm);
+			return "/hamburgueseria/direccionform";
+		}
+		
+		Direccion direccion = null;
+		Long idDireccion = direccionForm.getId();
+		System.out.println("estado id " + idDireccion);
+		if(idDireccion == null) {
+			direccion = new Direccion();
+		} else {
+			direccion = hamburgueseriaService.buscarDireccionPorId(idDireccion);
+		}
+		
+		direccion.setCalle(direccionForm.getCalle());
+		direccion.setNumero(direccionForm.getNumero());
+		direccion.setLocalidad(direccionForm.getLocalidad());
+		direccion.setProvincia(direccionForm.getProvincia());
+		direccion.setPais(direccionForm.getPais());
+		direccion.setCliente(direccionForm.getCliente());
+
+		if(idDireccion == null) {
+			try {
+				hamburgueseriaService.guardarNuevaDireccion(direccion);
+			} catch (Exception e) {
+				log.error("Error al gurdar un nueva direccion", e.getMessage());
+				return "redirect:/error";
+			}
+
+		} else {
+			hamburgueseriaService.actualizarDireccion(direccion);
+		}
+
+		return "redirect:/hamburgueseria/cliente/" + direccionForm.getCliente().getId();
+	}
+	
+	@GetMapping("cliente/direccion/{id}/borrar")
+	public String borrarDireccion(Model model, @PathVariable Long id) {
+		Long idCliente = hamburgueseriaService.buscarDireccionPorId(id).getCliente().getId();
+		hamburgueseriaService.borrarDireccionPorId(id);
+		return "redirect:/hamburgueseria/cliente/" + idCliente + "/editar";
+	}
+	
+	@GetMapping("/cliente/{id}/direcciones")
+	public String verDireccion(Model model, @PathVariable Long id) {
+		Direccion direccion = hamburgueseriaService.buscarDireccionPorId(id);
+		model.addAttribute("direccion", direccion);
+		return "/hamburgueseria/verdireccion";
+	}
+	
 }

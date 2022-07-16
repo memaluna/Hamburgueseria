@@ -12,7 +12,9 @@ public class Direccion {
 	private Long id;
 	private String calle;
 	private String numero;
-	private String barrio;
+	private String localidad;
+	private String provincia;
+	private String pais;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CLIENTE_ID")
@@ -22,12 +24,15 @@ public class Direccion {
 		super();
 	}
 
-	public Direccion(Long id, String calle, String numero, String barrio, Cliente cliente) {
+	public Direccion(Long id, String calle, String numero, String localidad, String provincia, String pais,
+			Cliente cliente) {
 		super();
 		this.id = id;
 		this.calle = calle;
 		this.numero = numero;
-		this.barrio = barrio;
+		this.localidad = localidad;
+		this.provincia = provincia;
+		this.pais = pais;
 		this.cliente = cliente;
 	}
 
@@ -55,12 +60,28 @@ public class Direccion {
 		this.numero = numero;
 	}
 
-	public String getBarrio() {
-		return barrio;
+	public String getLocalidad() {
+		return localidad;
 	}
 
-	public void setBarrio(String barrio) {
-		this.barrio = barrio;
+	public void setLocalidad(String localidad) {
+		this.localidad = localidad;
+	}
+
+	public String getProvincia() {
+		return provincia;
+	}
+
+	public void setProvincia(String provincia) {
+		this.provincia = provincia;
+	}
+
+	public String getPais() {
+		return pais;
+	}
+
+	public void setPais(String pais) {
+		this.pais = pais;
 	}
 
 	public Cliente getCliente() {
@@ -73,7 +94,7 @@ public class Direccion {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(barrio, calle, cliente, id, numero);
+		return Objects.hash(calle, cliente, id, localidad, numero, pais, provincia);
 	}
 
 	@Override
@@ -85,17 +106,16 @@ public class Direccion {
 		if (getClass() != obj.getClass())
 			return false;
 		Direccion other = (Direccion) obj;
-		return Objects.equals(barrio, other.barrio) && Objects.equals(calle, other.calle)
-				&& Objects.equals(cliente, other.cliente) && Objects.equals(id, other.id)
-				&& Objects.equals(numero, other.numero);
+		return Objects.equals(calle, other.calle) && Objects.equals(cliente, other.cliente)
+				&& Objects.equals(id, other.id) && Objects.equals(localidad, other.localidad)
+				&& Objects.equals(numero, other.numero) && Objects.equals(pais, other.pais)
+				&& Objects.equals(provincia, other.provincia);
 	}
 
 	@Override
 	public String toString() {
-		return "Direccion [id=" + id + ", calle=" + calle + ", numero=" + numero + ", barrio=" + barrio + ", cliente="
-				+ cliente.getId() + "]";
-	}
-
-	
+		return "Direccion [id=" + id + ", calle=" + calle + ", numero=" + numero + ", localidad=" + localidad
+				+ ", provincia=" + provincia + ", pais=" + pais + ", cliente=" + cliente.getId() + "]";
+	}	
 	
 }

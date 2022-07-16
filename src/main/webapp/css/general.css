@@ -12,3 +12,5 @@ label.error {
 	font-weight: bold;
 }
 a img {border:none}
+
+#map { height: 480px; }
