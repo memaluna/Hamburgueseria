@@ -93,8 +93,9 @@ public class Direccion {
 	@Override
 	public String toString() {
 		return "Direccion [id=" + id + ", calle=" + calle + ", numero=" + numero + ", barrio=" + barrio + ", cliente="
-				+ cliente + "]";
+				+ cliente.getId() + "]";
 	}
+
 	
 	
 }

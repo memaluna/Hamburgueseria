@@ -1,0 +1,14 @@
+body {
+	padding-top: 80px;
+}
+
+span.error {
+	color: red;
+	font-weight: bold;
+}
+
+label.error {
+	color: red;
+	font-weight: bold;
+}
+a img {border:none}
