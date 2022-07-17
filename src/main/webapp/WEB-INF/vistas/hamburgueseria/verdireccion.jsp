@@ -40,8 +40,8 @@
 
 	function initMap(lat, lng) {
 		  const myLatLng = {};
-			myLatLng["lat"] = lat;
-			myLatLng["lng"] = lng;
+			myLatLng["lat"] = parseFloat(lat);
+			myLatLng["lng"] = parseFloat(lng);
 		  const map = new google.maps.Map(document.getElementById("map"), {
 		    zoom: 18,
 		    center: myLatLng,
@@ -50,7 +50,7 @@
 		  new google.maps.Marker({
 		    position: myLatLng,
 		    map,
-		    title: "Hello World!",
+		    title: "Destino de pedido!",
 		  });
 		}
 	geocodeAddress(direccion, "619cabeb955b4c9485c33cc0fb323ad2");

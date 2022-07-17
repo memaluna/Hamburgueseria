@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Cliente;
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Direccion;
+import edu.Kolektor.ELuna.Hamburgueseria.bo.Producto;
 import edu.Kolektor.ELuna.Hamburgueseria.mvc.form.ClienteForm;
 import edu.Kolektor.ELuna.Hamburgueseria.mvc.form.DireccionForm;
+import edu.Kolektor.ELuna.Hamburgueseria.mvc.form.ProductoForm;
 import edu.Kolektor.ELuna.Hamburgueseria.service.HamburgueseriaService;
 
 @Controller
@@ -193,4 +195,101 @@ public class HamburgueseriaController {
 		return "/hamburgueseria/verdireccion";
 	}
 	
+	@GetMapping("/cliente/direccion/{id}/editar")
+	public String editarDireccion(Model model, @PathVariable Long id) {
+		Direccion direccion = hamburgueseriaService.buscarDireccionPorId(id);
+		System.out.println(direccion);
+		DireccionForm direccionForm = new DireccionForm();
+		direccionForm.setId(direccion.getId());
+		direccionForm.setCalle(direccion.getCalle());
+		direccionForm.setNumero(direccion.getNumero());
+		direccionForm.setLocalidad(direccion.getLocalidad());
+		direccionForm.setProvincia(direccion.getProvincia());
+		direccionForm.setPais(direccion.getPais());
+		direccionForm.setCliente(direccion.getCliente());
+				
+		model.addAttribute("direccionForm", direccionForm);
+		return "/hamburgueseria/direccionform";
+	}
+	
+	//Producto----------------------------------------->
+	
+	@GetMapping("/producto/nuevo")
+	public String nuevoProducto(Model model) {
+		model.addAttribute("productoForm", new ProductoForm());
+		return "/hamburgueseria/productoform";
+	}
+	
+	@PostMapping("/producto/guardar")
+	public String guardarProducto(@Valid @ModelAttribute(name = "productoForm") ProductoForm productoForm, BindingResult bindingResult, Model model) {
+
+		log.info("Ejecutando el guardar: " + bindingResult.hasErrors());
+		if(bindingResult.hasErrors()) {
+			model.addAttribute("productoForm", productoForm);
+			return "/hamburgueseria/productoform";
+		}
+		
+		Producto producto = null;
+		Long idHamburguesa = productoForm.getId();
+		System.out.println("estado id " + idHamburguesa);
+		if(idHamburguesa == null) {
+			producto = new Producto();
+		} else {
+			producto = hamburgueseriaService.buscarProductoPorId(idHamburguesa);
+		}
+		
+		producto.setNombre(productoForm.getNombre());
+		producto.setPrecio(productoForm.getPrecio());
+		producto.setIngredientes(productoForm.getIngredientes());
+		
+		
+		if(idHamburguesa == null) {
+			try {
+				hamburgueseriaService.guardarNuevoProducto(producto);
+			} catch (Exception e) {
+				log.error("Error al gurdar un nuevo producto", e.getMessage());
+				return "redirect:/error";
+			}
+
+		} else {
+			hamburgueseriaService.actualizarProducto(producto);
+		}
+
+		return "redirect:/hamburgueseria/productos";
+	}
+	
+	@GetMapping("/productos")
+	public String listarProductos(Model model) {
+		List<Producto> productos= hamburgueseriaService.recuperarProductos();
+		model.addAttribute("productos", productos);
+		return "hamburgueseria/listarproductos";
+	}
+	
+	@GetMapping("producto/{id}/borrar")
+	public String borrarProducto(Model model, @PathVariable Long id) {
+		hamburgueseriaService.borrarProductoPorId(id);
+		return "redirect:/hamburgueseria/productos";
+	}
+	
+	@GetMapping("/producto/{id}/editar")
+	public String editarHamburguesa(Model model, @PathVariable Long id) {
+		Producto producto = hamburgueseriaService.buscarProductoPorId(id);
+		System.out.println(producto);
+		ProductoForm productoForm = new ProductoForm();
+		productoForm.setId(producto.getId());
+		productoForm.setNombre(producto.getNombre());
+		productoForm.setPrecio(producto.getPrecio());
+		productoForm.setIngredientes(producto.getIngredientes());
+		
+		
+		model.addAttribute("productoForm", productoForm);
+		return "/hamburgueseria/productoform";
+	}
+	
+	@GetMapping("/producto/{id}")
+	public String verHamburguesa(Model model, @PathVariable Long id) {
+		Producto producto = hamburgueseriaService.buscarProductoPorId(id);
+		model.addAttribute("producto", producto);
+		return "/hamburgueseria/verproducto";
+	}
 }

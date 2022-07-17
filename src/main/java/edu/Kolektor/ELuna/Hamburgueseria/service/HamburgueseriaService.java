@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Cliente;
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Direccion;
+import edu.Kolektor.ELuna.Hamburgueseria.bo.Producto;
 
 public interface HamburgueseriaService {
 
@@ -20,5 +21,12 @@ public interface HamburgueseriaService {
 	Long guardarNuevaDireccion(Direccion direccion);
 	void actualizarDireccion(Direccion direccion);
 	void borrarDireccionPorId(Long id);
+	
+	//Servicios Producto
+	List<Producto> recuperarProductos();
+	Producto buscarProductoPorId(Long id);
+	Long guardarNuevoProducto(Producto producto);
+	void actualizarProducto(Producto producto);
+	void borrarProductoPorId(Long id);
 	
 }

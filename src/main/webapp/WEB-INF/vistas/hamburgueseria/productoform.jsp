@@ -13,9 +13,9 @@
 	});
 	</script>
 
-	<h1>Formulario de Hamburguesas</h1>
+	<h1>Cargar/Modificar Producto</h1>
 
-	<form:form method="post" action="/hamburguesas/hamburguesa/guardar" modelAttribute="hamburguesaForm" id="form-hamburguesa">
+	<form:form method="post" action="/hamburgueseria/producto/guardar" modelAttribute="productoForm" id="form-hamburguesa">
 
 		<div class="form-group">
 			<label>Id</label>
@@ -27,18 +27,16 @@
 			<form:input path="nombre" cssClass="form-control required" />
 			<form:errors path="nombre" cssClass="error"/>
 		</div>
-
+		<div class="form-group">
+			<label>Ingredientes</label>
+			<form:input path="ingredientes" cssClass="form-control required" />
+			<form:errors path="ingredientes" cssClass="error"/>
+		</div>
 		<div class="form-group">
 			<label>Precio</label>
 			<form:input path="precio" cssClass="form-control required number" />
 			<form:errors path="precio" cssClass="error"/>
 		</div>
-
-		<div class="form-group">
-			<label>Ingredientes</label>
-			<form:select path="ingredientes" items="${ingredientes}" itemLabel="nombre" itemValue="id" cssClass="form-control" id="select-ingredientes" />
-		</div>
-
 
 		<button type="submit" class="btn btn-primary">Enviar datos</button>
 	</form:form>

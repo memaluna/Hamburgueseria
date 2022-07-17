@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Cliente;
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Direccion;
+import edu.Kolektor.ELuna.Hamburgueseria.bo.Producto;
 import edu.Kolektor.ELuna.Hamburgueseria.repository.ClienteRepository;
 import edu.Kolektor.ELuna.Hamburgueseria.repository.DireccionRepository;
+import edu.Kolektor.ELuna.Hamburgueseria.repository.ProductoRepository;
 
 @Service
 public class HamburgueseriaServiceImpl implements HamburgueseriaService{
@@ -18,6 +20,8 @@ public class HamburgueseriaServiceImpl implements HamburgueseriaService{
 	private ClienteRepository clienteRepository;
 	@Autowired
 	private DireccionRepository direccionRepository;
+	@Autowired
+	private ProductoRepository productoRepository;
 	
 	//Implementacion Clientes
 	
@@ -75,6 +79,34 @@ public class HamburgueseriaServiceImpl implements HamburgueseriaService{
 	@Override
 	public void borrarDireccionPorId(Long id) {
 		direccionRepository.deleteById(id);	
+	}
+
+	//Productos ------------------------>
+	@Override
+	public List<Producto> recuperarProductos() {
+		return productoRepository.findAllByOrderById();
+	}
+
+	@Override
+	public Producto buscarProductoPorId(Long id) {
+		Optional<Producto> productoOptional = productoRepository.findById(id);
+		return productoOptional.get();
+	}
+
+	@Override
+	public Long guardarNuevoProducto(Producto producto) {
+		productoRepository.save(producto);
+		return producto.getId();
+	}
+
+	@Override
+	public void actualizarProducto(Producto producto) {
+		productoRepository.save(producto);		
+	}
+
+	@Override
+	public void borrarProductoPorId(Long id) {
+		productoRepository.deleteById(id);		
 	}
 	
 }

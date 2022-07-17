@@ -90,7 +90,7 @@
 									<path fill="#97FBB4" d="M25.6,30.9l6.2,5.1C37.5,29,46,25,55,25v-8C43.6,17,32.9,22.1,25.6,30.9z"/>
 									<path fill="#97FBB4" d="M17,55h8c0-2.1,0.2-4.1,0.6-6.1l-7.8-1.6C17.3,49.8,17,52.4,17,55z"/></g></svg>
 								</a>&nbsp;
-								<a href="/hamburguesas/hamburguesa/${direcciones.id}/editar">
+								<a href="/hamburgueseria/cliente/direccion/${direcciones.id}/editar">
 								<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 									 width="16px" height="16px" viewBox="0 0 485.219 485.22" style="enable-background:new 0 0 485.219 485.22;"
 									 xml:space="preserve">

@@ -9,10 +9,11 @@
 
 
 <div class="card">
-  <h5 class="card-header">Ingrediente id: ${ingrediente.id}</h5>
+  <h5 class="card-header">Producto id: ${producto.id}</h5>
   <div class="card-body">
-    <h5 class="card-title">${ingrediente.nombre}</h5>
-    <p class="card-text">Stock: <fmt:formatNumber type="number" value="${ingrediente.stock}" /> </p>    
+    <h5 class="card-title">${producto.nombre}</h5>
+    <p class="card-text"><b>Ingredientes: </b>${producto.ingredientes}</p>
+    <p class="card-text"><b>Precio: </b>${producto.precio}</p>      
   </div>
 </div>
 <br>
