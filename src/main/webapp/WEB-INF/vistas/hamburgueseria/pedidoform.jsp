@@ -10,6 +10,56 @@
 		let cantidad = [];
 		let pedido = {};
  		$(document).ready(function() {
+			//cargar campos si esta por editarse
+ 			if($('#idcampo').val() == null || $('#idcampo').val() == ""){
+ 				console.log("igual de null")
+ 			}else{
+ 				 				 				
+ 				let idPedido = $('#idcampo').val();
+				
+ 				$.ajax({
+			        url: "http://localhost:8080/api/hamburgueseria/pedido/" + idPedido
+			    }).then(function(data) {
+					console.log(data);
+					$('#fecha-pedido').val(data.fechaAlta);
+					
+					var select = $('#select-clientes');
+					var option = $('<option></option>').
+					     attr('selected', true).
+					     text(data.cliente.fullDatos).
+					     val(data.cliente.id);
+					option.appendTo(select);
+					select.trigger('change');
+					
+				   for(var i=0; i<data.detalles.length; i++){
+			 		var htmlTags = '<tr>'+
+	 		        '<td class=data id=' + data.detalles[i].producto.id +'>' + data.detalles[i].producto.id + '</td>'+
+	 		        '<td>' + data.detalles[i].producto.nombre + '</td>'+
+	 		        '<td><input type="number" value="'+data.detalles[i].cantidad+'" min=1 id=' + data.detalles[i].producto.id +' onchange="actualizarCantidad(id, value, '+data.detalles[i].producto.precio+')"/></td>'+
+	 		        '<td>' + data.detalles[i].producto.precio + '</td>'+
+	 		        '<td id=sub'+data.detalles[i].producto.id+' class=subtotal>' + data.detalles[i].producto.precio + '</td>'+
+		            '<td><a id="btn-borrar"><svg height="16px" width="16px" xmlns="http://www.w3.org/2000/svg"><path fill="#FF5858" d="M7.5 0C6.4 0 5.355.32 5.355.32L5 .428v1.683A13.88 13.88 0 0 0 2.002 3L2 4H1v1h1l.004 9c0 .439.04.788.15 1.082.111.294.311.528.563.668.503.28 1.12.25 1.953.25h5.664c.833 0 1.45.03 1.953-.25.252-.14.45-.374.56-.668.11-.294.153-.643.153-1.082l-.002-8h-1L12 14c0 .376-.04.603-.088.729-.034.09-.078.129-.11.146-.173.097-.611.125-1.468.125H4.67c-.857 0-1.295-.028-1.469-.125a.267.267 0 0 1-.113-.146v-.002c-.046-.122-.084-.348-.084-.727v-.002L3 5h11V4h-1.002L13 3a13.855 13.855 0 0 0-3-.889V.449L9.67.33S8.757 0 7.5 0zm0 1c.89 0 1.29.155 1.5.22v.739a14.05 14.05 0 0 0-1.498-.084c-.502 0-1.003.032-1.502.086v-.734C6.266 1.157 6.772 1 7.5 1zM5 6v6h1V6zm2 0v6h1V6zm2 0v6h1V6z" fill="gray" font-family="Ubuntu" font-size="15" font-weight="400" letter-spacing="0" style="line-height:125%;-inkscape-font-specification:Ubuntu;text-align:center" text-anchor="middle" word-spacing="0"/></svg></a></td>'
+					   '</tr>';  
+			 		   $('#tabla-productos tbody').append(htmlTags);
+				   }
+
+			    });
+				
+ 				$.ajax({
+			        url: "http://localhost:8080/api/hamburgueseria/productos"
+			    }).then(function(data) {
+					console.log(data);
+				       $.each(data, function(id, nombre) {
+					       console.log(nombre.id)
+				    	   $("#select-producto").append('<option value=' + nombre.id + '>' + nombre.nombre + '</option>');
+				    	    });
+			    });
+				
+ 			}
+ 			
+ 			
+ 			
+ 			
  			moment.locale('es');
 			//$('#select-hamburguesas').select2();			
 			$('#select-clientes').select2({
@@ -151,7 +201,7 @@
 	<form:form method="post" action="/hamburgueseria/pedido/guardar" modelAttribute="pedidoForm" id="form-pedido">
 		<div class="form-group">
 			<label>Id</label>
-			<form:input path="id" readonly="true" cssClass="form-control"/>
+			<form:input path="id" readonly="true" cssClass="form-control" id="idcampo"/>
 		</div>
 		<div class="form-group">
 			<label>Fecha y hora de pedido</label>
