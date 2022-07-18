@@ -193,7 +193,8 @@
 				</table> 
 		<div class="form-group">
 			<label>Importe total</label>
-			<input id="importetotal" readonly="true" class="form-control"/>
+			<form:input id="importetotal" path="totalImporte" readonly="true" class="form-control" cssClass="form-control required number"/>
+			<form:errors path="totalImporte" cssClass="error"/>
 		</div>	
 		<button type="submit" class="btn btn-primary" id="btnconfirmar">Enviar datos</button>
 	</form:form>

@@ -17,6 +17,7 @@ public class PedidoForm {
 	private Date fechaAlta;
 	private List<Detalle> detalles;
 	private String descripcion;
+	private Double totalImporte;
 	
 	public Long getId() {
 		return id;
@@ -57,11 +58,17 @@ public class PedidoForm {
 	public void addItemFactura(Detalle detalle) {
 		this.detalles.add(detalle);
 	}
-
+	public Double getTotalImporte() {
+		return totalImporte;
+	}
+	public void setTotalImporte(Double totalImporte) {
+		this.totalImporte = totalImporte;
+	}
 	@Override
 	public String toString() {
 		return "PedidoForm [id=" + id + ", cliente=" + cliente + ", direccionEntrega=" + direccionEntrega
-				+ ", fechaAlta=" + fechaAlta + ", detalles=" + detalles + ", descripcion=" + descripcion + "]";
+				+ ", fechaAlta=" + fechaAlta + ", detalles=" + detalles + ", descripcion=" + descripcion
+				+ ", totalImporte=" + totalImporte + "]";
 	}
-	
+
 }

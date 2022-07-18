@@ -49,13 +49,16 @@
 	          <a class="nav-link" href="<c:url value="/hamburgueseria/cliente/nuevo"/>">Nuevo cliente</a>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link" href="<c:url value="/hamburguesas/ingredientes"/>">Listado de ingredientes</a>
+	          <a class="nav-link" href="<c:url value="/hamburgueseria/pedidos"/>">Listado de pedidos</a>
 	        </li>
 	        <li class="nav-item">
-	          <a class="nav-link" href="<c:url value="/hamburguesas/ingrediente/nuevo"/>">Nuevo ingrediente</a>
+	          <a class="nav-link" href="<c:url value="/hamburgueseria/pedido/nuevo"/>">Nuevo pedido</a>
 	        </li>
 	       	<li class="nav-item">
-	          <a class="nav-link" href="<c:url value="/hamburguesas/pedido/nuevo"/>">Nuevo pedido</a>
+	          <a class="nav-link" href="<c:url value="/hamburgueseria/productos"/>">Listado de productos</a>
+	        </li>
+	       	<li class="nav-item">
+	          <a class="nav-link" href="<c:url value="/hamburgueseria/producto/nuevo"/>">Nuevo producto</a>
 	        </li>
 	      </ul>
 	    </div>

@@ -324,7 +324,9 @@ public class HamburgueseriaController {
 	public String guardarPedido(@Valid @ModelAttribute(name = "pedidoForm") PedidoForm pedidoForm, BindingResult bindingResult, Model model, 
 			@RequestParam(name = "item_id[]", required = false) Long[] itemId,
 			@RequestParam(name = "cantidad[]", required = false) Long[] cantidad) {
-			
+		
+		System.out.println(pedidoForm.getTotalImporte());
+		
 		log.info("Ejecutando el guardar: " + bindingResult.hasErrors());
 		if(bindingResult.hasErrors()) {
 			model.addAttribute("pedidoForm", pedidoForm);
@@ -348,6 +350,7 @@ public class HamburgueseriaController {
 		pedido.setCliente(pedidoForm.getCliente());
 		pedido.setDireccionEntrega(pedidoForm.getDireccionEntrega());
 		pedido.setFechaAlta(pedidoForm.getFechaAlta());
+		pedido.setTotalImporte(pedidoForm.getTotalImporte());
 		//pedido.setDetalles(pedidoForm.getDetalles());
 		pedido.setDescripcion(pedidoForm.getDescripcion());
 		
@@ -384,7 +387,7 @@ public class HamburgueseriaController {
 	}
 	
 	@GetMapping("/pedidos")
-	public String listarPedido(Model model) {
+	public String listarPedidos(Model model) {
 		List<Pedido> pedidos= hamburgueseriaService.recuperarPedidos();
 		model.addAttribute("pedidos", pedidos);
 		return "hamburgueseria/listarpedidos";
@@ -407,6 +410,7 @@ public class HamburgueseriaController {
 		pedidoForm.setFechaAlta(pedido.getFechaAlta());
 		pedidoForm.setDetalles(pedido.getDetalles());
 		pedidoForm.setDescripcion(pedido.getDescripcion());
+		pedidoForm.setTotalImporte(pedido.getTotalImporte());
 		
 		model.addAttribute("pedidoForm", pedidoForm);
 		return "/hamburgueseria/pedidoform";
