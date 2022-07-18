@@ -6,10 +6,28 @@
 
 	<script type="text/javascript">
 		//definimos dos arreglos con id de producto y cantidad de producto
+		//defino un objeto pedido que almacena key numero de pto y valor cantidad
  		let item_id =  [];
 		let cantidad = [];
 		let pedido = {};
  		$(document).ready(function() {
+ 			//seteamos select2, moment, validate
+ 			moment.locale('es');
+			//$('#select-hamburguesas').select2();			
+			$('#select-clientes').select2({
+				theme: 'bootstrap4'
+			});
+			$('#direccion').select2({
+				theme: 'bootstrap4'
+			});
+			$('#select-producto').select2({
+				theme: 'bootstrap4'
+			});
+			$('#form-pedido').validate();
+			$("#entregadoCB").click(function() { return false; });
+ 			
+ 			
+ 			
 			//cargar campos si esta por editarse
  			if($('#idcampo').val() == null || $('#idcampo').val() == ""){
  				console.log("igual de null")
@@ -56,23 +74,6 @@
 			    });
 				
  			}
- 			
- 			
- 			
- 			
- 			moment.locale('es');
-			//$('#select-hamburguesas').select2();			
-			$('#select-clientes').select2({
-				theme: 'bootstrap4'
-			});
-			$('#direccion').select2({
-				theme: 'bootstrap4'
-			});
-			$('#select-producto').select2({
-				theme: 'bootstrap4'
-			});
-			$('#form-pedido').validate();
-			$("#entregadoCB").click(function() { return false; });
 			
 			//logica para extraer direccion asociada a cliente
 			$('#select-clientes').on('change', function (e) {
@@ -99,8 +100,6 @@
 			
 			 //logica para agregar y quitar producto a lista de compras.
 			$("#agregar-producto").click(function() {				
-				//console.log("evento");
-				//console.log($("#select-producto").val());
 				let idProducto = $("#select-producto").val();
 				//peticion ajax para traer datos de producto 
 				$.ajax({
@@ -193,8 +192,7 @@
  			    }); 
  			    //cambia valor del total y lo redondea a la segunda decimal
  			    $('#importetotal').val(sum.toFixed(2));
- 			}
- 				
+ 			} 				
 	</script>
 
 	<h1>Cargar nuevo pedido</h1>
