@@ -45,27 +45,12 @@
 			    	$("#direccion").val("");
 			    } 
 			});
-			
-			
-			
-/* 			$('#direccion').on('select2:select', function (e) {
-				$('#direccion-elegida').val($("#direccion").text())
-				});
-			
-			$('#direccion').on('select2:select', function (e) {
-			    var data = e.params.data;
-			    console.log(data);
-			});
-			
-			
-/* 			$('#direccion').on('change', function (e) {
-				$('#direccion-elegida').val($("#direccion").text())
-			}); */ 
+						
 			
 			 //logica para agregar y quitar producto a lista de compras.
 			$("#agregar-producto").click(function() {				
-				console.log("evento");
-				console.log($("#select-producto").val());
+				//console.log("evento");
+				//console.log($("#select-producto").val());
 				let idProducto = $("#select-producto").val();
 				//peticion ajax para traer datos de producto 
 				$.ajax({
@@ -85,6 +70,15 @@
 			$(document).on('DOMNodeInserted', $('.subtotal'), function() {
 				sumar_columnas()
 			});
+			
+			$(document).on('click', '#btn-borrar', function(event) {
+				  event.preventDefault();
+				  $(this).closest('tr').remove();
+		 			sumar_columnas();
+		 			let idElegido = $(this).parent().parent().find('.data').text();
+		 			delete pedido[idElegido];
+		 			console.log(pedido);
+				});
 			
 		}); 
  		
@@ -108,19 +102,18 @@
  		    });			
  		
  		function agregarFila(id, nombre, precio, subtotal, cant) {
-   
  		   //Algoritmo para ver si hay producto repedito
-			if(item_id.indexOf(id) === -1) {
+			if(!pedido.hasOwnProperty(id)) {
 				//sino existe agregar linea y agregar id a array
 				pedido[id] = 1;
 				item_id.push(id);
 		 		var htmlTags = '<tr>'+
-	 		        '<td id=' + id +'>' + id + '</td>'+
+	 		        '<td class=data id=' + id +'>' + id + '</td>'+
 	 		        '<td>' + nombre + '</td>'+
 	 		        '<td><input type="number" value="1" min=1 id=' + id +' onchange="actualizarCantidad(id, value, '+precio+')"/></td>'+
 	 		        '<td>' + precio + '</td>'+
 	 		        '<td id=sub'+id+' class=subtotal>' + subtotal + '</td>'+
-		            '<td><a href="/hamburgueseria/cliente/direccion/${direcciones.id}/borrar" id="btn-borrar"><svg height="16px" width="16px" xmlns="http://www.w3.org/2000/svg"><path fill="#FF5858" d="M7.5 0C6.4 0 5.355.32 5.355.32L5 .428v1.683A13.88 13.88 0 0 0 2.002 3L2 4H1v1h1l.004 9c0 .439.04.788.15 1.082.111.294.311.528.563.668.503.28 1.12.25 1.953.25h5.664c.833 0 1.45.03 1.953-.25.252-.14.45-.374.56-.668.11-.294.153-.643.153-1.082l-.002-8h-1L12 14c0 .376-.04.603-.088.729-.034.09-.078.129-.11.146-.173.097-.611.125-1.468.125H4.67c-.857 0-1.295-.028-1.469-.125a.267.267 0 0 1-.113-.146v-.002c-.046-.122-.084-.348-.084-.727v-.002L3 5h11V4h-1.002L13 3a13.855 13.855 0 0 0-3-.889V.449L9.67.33S8.757 0 7.5 0zm0 1c.89 0 1.29.155 1.5.22v.739a14.05 14.05 0 0 0-1.498-.084c-.502 0-1.003.032-1.502.086v-.734C6.266 1.157 6.772 1 7.5 1zM5 6v6h1V6zm2 0v6h1V6zm2 0v6h1V6z" fill="gray" font-family="Ubuntu" font-size="15" font-weight="400" letter-spacing="0" style="line-height:125%;-inkscape-font-specification:Ubuntu;text-align:center" text-anchor="middle" word-spacing="0"/></svg></a></td>'
+		            '<td><a id="btn-borrar"><svg height="16px" width="16px" xmlns="http://www.w3.org/2000/svg"><path fill="#FF5858" d="M7.5 0C6.4 0 5.355.32 5.355.32L5 .428v1.683A13.88 13.88 0 0 0 2.002 3L2 4H1v1h1l.004 9c0 .439.04.788.15 1.082.111.294.311.528.563.668.503.28 1.12.25 1.953.25h5.664c.833 0 1.45.03 1.953-.25.252-.14.45-.374.56-.668.11-.294.153-.643.153-1.082l-.002-8h-1L12 14c0 .376-.04.603-.088.729-.034.09-.078.129-.11.146-.173.097-.611.125-1.468.125H4.67c-.857 0-1.295-.028-1.469-.125a.267.267 0 0 1-.113-.146v-.002c-.046-.122-.084-.348-.084-.727v-.002L3 5h11V4h-1.002L13 3a13.855 13.855 0 0 0-3-.889V.449L9.67.33S8.757 0 7.5 0zm0 1c.89 0 1.29.155 1.5.22v.739a14.05 14.05 0 0 0-1.498-.084c-.502 0-1.003.032-1.502.086v-.734C6.266 1.157 6.772 1 7.5 1zM5 6v6h1V6zm2 0v6h1V6zm2 0v6h1V6z" fill="gray" font-family="Ubuntu" font-size="15" font-weight="400" letter-spacing="0" style="line-height:125%;-inkscape-font-specification:Ubuntu;text-align:center" text-anchor="middle" word-spacing="0"/></svg></a></td>'
 			   '</tr>';  
 	 		   $('#tabla-productos tbody').append(htmlTags);
 	 		   console.log(pedido);
@@ -135,6 +128,7 @@
  			pedido[id] = parseInt(valor);
  			$('#sub'+id).text(valor*precio);
  			sumar_columnas();
+ 			console.log(pedido);
  		}
  				
  		function calcularSubtotal(precio, cantidad){
