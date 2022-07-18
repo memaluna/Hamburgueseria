@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "ClienteHam")
 public class Cliente {
@@ -19,6 +21,7 @@ public class Cliente {
 	private String telefono;
 	
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties(value="cliente")
 	private List <Direccion> direcciones = new ArrayList<Direccion>();
 	private String email;
 	private LocalDate fechaAlta;
@@ -93,7 +96,11 @@ public class Cliente {
 	public void setFechaAlta(LocalDate fechaAlta) {
 		this.fechaAlta = fechaAlta;
 	}
-
+	
+	public String getFullDatos() {
+		return this.getNombre() + " " + this.getApellido() + " Nº Cliente: " + this.getId();
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(apellido, direcciones, email, fechaAlta, id, nombre, telefono);

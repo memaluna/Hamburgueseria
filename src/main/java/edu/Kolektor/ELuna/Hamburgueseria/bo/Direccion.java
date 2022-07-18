@@ -3,6 +3,8 @@ package edu.Kolektor.ELuna.Hamburgueseria.bo;
 import java.util.Objects;
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "DireccionHam")
 public class Direccion {
@@ -90,6 +92,10 @@ public class Direccion {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+	
+	public String getDireccionFull() {
+		return this.getCalle() + " " + this.getNumero() + " - " + this.getLocalidad();
 	}
 
 	@Override

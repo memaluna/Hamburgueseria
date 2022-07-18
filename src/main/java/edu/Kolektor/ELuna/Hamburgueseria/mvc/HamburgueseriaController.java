@@ -13,11 +13,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Cliente;
+import edu.Kolektor.ELuna.Hamburgueseria.bo.Detalle;
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Direccion;
+import edu.Kolektor.ELuna.Hamburgueseria.bo.Pedido;
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Producto;
 import edu.Kolektor.ELuna.Hamburgueseria.mvc.form.ClienteForm;
 import edu.Kolektor.ELuna.Hamburgueseria.mvc.form.DireccionForm;
+import edu.Kolektor.ELuna.Hamburgueseria.mvc.form.PedidoForm;
 import edu.Kolektor.ELuna.Hamburgueseria.mvc.form.ProductoForm;
 import edu.Kolektor.ELuna.Hamburgueseria.service.HamburgueseriaService;
 
@@ -28,7 +33,7 @@ public class HamburgueseriaController {
 	private static  Logger log = LoggerFactory.getLogger(HamburgueseriaController.class);
 	@Autowired
 	private HamburgueseriaService hamburgueseriaService;
-	
+
 	//Cliente ------------------>
 	
 	@GetMapping("/cliente/nuevo")
@@ -230,12 +235,12 @@ public class HamburgueseriaController {
 		}
 		
 		Producto producto = null;
-		Long idHamburguesa = productoForm.getId();
-		System.out.println("estado id " + idHamburguesa);
-		if(idHamburguesa == null) {
+		Long idProducto = productoForm.getId();
+		System.out.println("estado id " + idProducto);
+		if(idProducto == null) {
 			producto = new Producto();
 		} else {
-			producto = hamburgueseriaService.buscarProductoPorId(idHamburguesa);
+			producto = hamburgueseriaService.buscarProductoPorId(idProducto);
 		}
 		
 		producto.setNombre(productoForm.getNombre());
@@ -243,7 +248,7 @@ public class HamburgueseriaController {
 		producto.setIngredientes(productoForm.getIngredientes());
 		
 		
-		if(idHamburguesa == null) {
+		if(idProducto == null) {
 			try {
 				hamburgueseriaService.guardarNuevoProducto(producto);
 			} catch (Exception e) {
@@ -291,5 +296,126 @@ public class HamburgueseriaController {
 		Producto producto = hamburgueseriaService.buscarProductoPorId(id);
 		model.addAttribute("producto", producto);
 		return "/hamburgueseria/verproducto";
+	}
+	
+	//Pedido----------------------------------------->
+	
+	//Cargar Pedidos en form
+	private void cargarClientes(Model model) {
+		List<Cliente> clientes = hamburgueseriaService.recuperarClientes();
+		model.addAttribute("clientes", clientes);
+	}
+	
+	private void cargarProductos(Model model) {
+		List<Producto> productos = hamburgueseriaService.recuperarProductos();
+		model.addAttribute("productos", productos);
+	}
+	
+	@GetMapping("/pedido/nuevo")
+	public String nuevoPedido(Model model) {
+		this.cargarClientes(model);
+		this.cargarProductos(model);
+		model.addAttribute("pedidoForm", new PedidoForm());
+		System.out.println(model);
+		return "/hamburgueseria/pedidoform";
+	}
+	
+	@PostMapping("/pedido/guardar")
+	public String guardarPedido(@Valid @ModelAttribute(name = "pedidoForm") PedidoForm pedidoForm, BindingResult bindingResult, Model model, 
+			@RequestParam(name = "item_id[]", required = false) Long[] itemId,
+			@RequestParam(name = "cantidad[]", required = false) Long[] cantidad) {
+			
+		log.info("Ejecutando el guardar: " + bindingResult.hasErrors());
+		if(bindingResult.hasErrors()) {
+			model.addAttribute("pedidoForm", pedidoForm);
+			return "/hamburgueseria/pedidoform";
+		}
+		
+		if (itemId == null || itemId.length == 0) {
+			System.out.println("tiene que tener linea de productos");;
+			return "factura/form";
+		}
+
+		Pedido pedido = null;
+		Long idPedido = pedidoForm.getId();
+		System.out.println("estado id " + idPedido);
+		if(idPedido == null) {
+			pedido = new Pedido();
+		} else {
+			pedido = hamburgueseriaService.buscarPedidoPorId(idPedido);
+		}
+		
+		pedido.setCliente(pedidoForm.getCliente());
+		pedido.setDireccionEntrega(pedidoForm.getDireccionEntrega());
+		pedido.setFechaAlta(pedidoForm.getFechaAlta());
+		//pedido.setDetalles(pedidoForm.getDetalles());
+		pedido.setDescripcion(pedidoForm.getDescripcion());
+		
+		
+		//se crean detalles y se agregan a obj pedido
+		for (int i = 0; i < itemId.length; i++) {
+			
+			Producto producto = hamburgueseriaService.buscarProductoPorId(itemId[i]);
+			Detalle detalle = new Detalle();
+			detalle.setCantidad(cantidad[i]);
+			detalle.setProducto(producto);
+			//System.out.println(producto);
+			//System.out.println(detalle);
+			pedido.addItemFactura(detalle);
+
+			log.info("ID: " + itemId[i].toString() + " cantidad: " + cantidad[i].toString());
+		}		
+		
+		System.out.println("PEDIDADDDPPPP" + pedido);
+		
+		if(idPedido == null) {
+			try {
+				hamburgueseriaService.guardarNuevoPedido(pedido);
+			} catch (Exception e) {
+				log.error("Error al gurdar un nuevo pedido", e.getMessage());
+				return "redirect:/error";
+			}
+
+		} else {
+			hamburgueseriaService.actualizarPedido(pedido);
+		}
+
+		return "redirect:/hamburgueseria/pedidos";
+	}
+	
+	@GetMapping("/pedidos")
+	public String listarPedido(Model model) {
+		List<Pedido> pedidos= hamburgueseriaService.recuperarPedidos();
+		model.addAttribute("pedidos", pedidos);
+		return "hamburgueseria/listarpedidos";
+	}
+	
+	@GetMapping("pedido/{id}/borrar")
+	public String borrarPedido(Model model, @PathVariable Long id) {
+		hamburgueseriaService.borrarPedidoPorId(id);
+		return "redirect:/hamburgueseria/pedidos";
+	}
+	
+	@GetMapping("/pedido/{id}/editar")
+	public String editarPedido(Model model, @PathVariable Long id) {
+		Pedido pedido = hamburgueseriaService.buscarPedidoPorId(id);
+		System.out.println(pedido);
+		PedidoForm pedidoForm = new PedidoForm();
+		pedidoForm.setId(pedido.getId());
+		pedidoForm.setCliente(pedido.getCliente());
+		pedidoForm.setDireccionEntrega(pedido.getDireccionEntrega());
+		pedidoForm.setFechaAlta(pedido.getFechaAlta());
+		pedidoForm.setDetalles(pedido.getDetalles());
+		pedidoForm.setDescripcion(pedido.getDescripcion());
+		
+		model.addAttribute("pedidoForm", pedidoForm);
+		return "/hamburgueseria/pedidoform";
+	}
+	
+	@GetMapping("/pedido/{id}")
+	public String verPedido(Model model, @PathVariable Long id) {
+		Pedido pedido = hamburgueseriaService.buscarPedidoPorId(id);
+		model.addAttribute("pedido", pedido);
+		return "/hamburgueseria/verpedido";
 	}
 }

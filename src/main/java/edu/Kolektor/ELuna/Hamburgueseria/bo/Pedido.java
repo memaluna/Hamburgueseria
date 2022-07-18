@@ -18,6 +18,7 @@ public class Pedido {
 	private Cliente cliente;
 	
 	private String direccionEntrega;
+	private String descripcion;
 	
 	@Column(name = "fechaAlta")
 	@Temporal(TemporalType.DATE)
@@ -79,6 +80,15 @@ public class Pedido {
 	public void setDireccionEntrega(String direccionEntrega) {
 		this.direccionEntrega = direccionEntrega;
 	}
+	
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
 
 	public void setDetalles(List<Detalle> detalles) {
 		this.detalles = detalles;
@@ -99,7 +109,7 @@ public class Pedido {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cliente, detalles, direccionEntrega, fechaAlta, id);
+		return Objects.hash(cliente, descripcion, detalles, direccionEntrega, fechaAlta, id);
 	}
 
 	@Override
@@ -111,16 +121,15 @@ public class Pedido {
 		if (getClass() != obj.getClass())
 			return false;
 		Pedido other = (Pedido) obj;
-		return Objects.equals(cliente, other.cliente) && Objects.equals(detalles, other.detalles)
-				&& Objects.equals(direccionEntrega, other.direccionEntrega)
+		return Objects.equals(cliente, other.cliente) && Objects.equals(descripcion, other.descripcion)
+				&& Objects.equals(detalles, other.detalles) && Objects.equals(direccionEntrega, other.direccionEntrega)
 				&& Objects.equals(fechaAlta, other.fechaAlta) && Objects.equals(id, other.id);
 	}
 
 	@Override
 	public String toString() {
-		return "Pedido [id=" + id + ", cliente=" + cliente + ", direccionEntrega=" + direccionEntrega + ", fechaAlta="
-				+ fechaAlta + ", detalles=" + detalles + "]";
+		return "Pedido [id=" + id + ", cliente=" + cliente + ", direccionEntrega=" + direccionEntrega + ", descripcion="
+				+ descripcion + ", fechaAlta=" + fechaAlta + ", detalles=" + detalles + "]";
 	}
-
 	
 }

@@ -4,11 +4,15 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Cliente;
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Direccion;
+import edu.Kolektor.ELuna.Hamburgueseria.bo.Pedido;
 import edu.Kolektor.ELuna.Hamburgueseria.bo.Producto;
 import edu.Kolektor.ELuna.Hamburgueseria.repository.ClienteRepository;
 import edu.Kolektor.ELuna.Hamburgueseria.repository.DireccionRepository;
+import edu.Kolektor.ELuna.Hamburgueseria.repository.PedidoRepository;
 import edu.Kolektor.ELuna.Hamburgueseria.repository.ProductoRepository;
 
 @Service
@@ -22,6 +26,8 @@ public class HamburgueseriaServiceImpl implements HamburgueseriaService{
 	private DireccionRepository direccionRepository;
 	@Autowired
 	private ProductoRepository productoRepository;
+	@Autowired
+	private PedidoRepository pedidoRepository;
 	
 	//Implementacion Clientes
 	
@@ -88,6 +94,7 @@ public class HamburgueseriaServiceImpl implements HamburgueseriaService{
 	}
 
 	@Override
+	@Transactional
 	public Producto buscarProductoPorId(Long id) {
 		Optional<Producto> productoOptional = productoRepository.findById(id);
 		return productoOptional.get();
@@ -108,5 +115,52 @@ public class HamburgueseriaServiceImpl implements HamburgueseriaService{
 	public void borrarProductoPorId(Long id) {
 		productoRepository.deleteById(id);		
 	}
-	
-}
+
+	@Override
+	public List<Pedido> recuperarPedidos() {
+		return pedidoRepository.findAllByOrderById();
+	}
+
+	@Override
+	public Pedido buscarPedidoPorId(Long id) {
+		Optional<Pedido> pedidoOptional = pedidoRepository.findById(id);
+		return pedidoOptional.get();
+	}
+
+	@Override
+	public Long guardarNuevoPedido(Pedido pedido) {
+		pedidoRepository.save(pedido);
+		return pedido.getId();
+	}
+
+	@Override
+	public void actualizarPedido(Pedido pedido) {
+		pedidoRepository.save(pedido);			
+	}
+
+	@Override
+	public void borrarPedidoPorId(Long id) {
+		pedidoRepository.deleteById(id);		
+	}
+
+	@Override
+	public List<Producto> buscarProductos(String nombre) {
+		return productoRepository.buscarProducto(nombre);
+	}
+
+	@Override
+	public List<Producto> buscarProductos(String nombre, Double precio) {
+		return productoRepository.buscarProducto(nombre, precio);
+	}
+
+	@Override
+	public List<Direccion> buscarDirecciones(String calle) {
+		return direccionRepository.buscarDireccion(calle);
+	}
+
+	@Override
+	public List<Cliente> buscarClientesPorNombre(String nombre) {
+		return clienteRepository.buscarClientesPorNombre(nombre);
+	}
+
+} 
